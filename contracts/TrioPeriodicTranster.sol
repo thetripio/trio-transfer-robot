@@ -1,10 +1,9 @@
 pragma solidity ^0.4.21;
 
-import "./Owned.sol";
+import "./extensions/TPTTransfer.sol";
 
-contract TrioPeriodicTranster is Owned {
-    function TrioPeriodicTranster() public {
-        
+contract TrioPeriodicTranster is TPTContributors, TPTSchedules {
+    function TrioPeriodicTranster(address _trio) public {
+        trioContract = _trio;
     }
-    
 }
