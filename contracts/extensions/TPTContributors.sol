@@ -56,6 +56,7 @@ contract TPTContributors is TPTData, Owned {
                 delete contributorChain.nodes[_cid];
                 contributorChain.tail = prev;
             }else {
+                delete contributorChain.nodes[_cid];
                 delete contributorChain;
             }
         } else {

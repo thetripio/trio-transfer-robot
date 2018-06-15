@@ -11,7 +11,7 @@ contract TPTSchedules is TPTData, Owned {
     /**
      * This emits when schedules are inserted
      */
-    event SchedulesInserted(uint256 _cid, uint32[] _timestamps, uint256[] _trios);
+    event SchedulesInserted(uint256 _cid);
 
     /**
      * This emits when schedules are removed
@@ -60,7 +60,7 @@ contract TPTSchedules is TPTData, Owned {
         }
 
         // Event
-        emit SchedulesInserted(_cid, _timestamps, _trios);
+        emit SchedulesInserted(_cid);
     }
 
     /**
@@ -85,6 +85,7 @@ contract TPTSchedules is TPTData, Owned {
                     delete scheduleChains[_cid].nodes[sid];
                     scheduleChains[_cid].tail = prev;
                 }else {
+                    delete scheduleChains[_cid].nodes[sid];
                     delete scheduleChains[_cid];
                 }
             } else {

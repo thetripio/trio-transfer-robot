@@ -1,7 +1,7 @@
 pragma solidity ^0.4.21;
 
 contract TPTData {
-    address trioContract;
+    address public trioContract;
 
     struct Contributor {
         uint256 next;
