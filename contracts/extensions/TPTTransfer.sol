@@ -1,12 +1,10 @@
 pragma solidity ^0.4.21;
 
-import "./TPTData.sol";
-import "./Owned.sol";
 import "./TripioToken.sol";
 import "./TPTContributors.sol";
 import "./TPTSchedules.sol";
 
-contract TPTTransfer is Owned, TPTContributors, TPTSchedules {
+contract TPTTransfer is TPTContributors, TPTSchedules {
     function TPTTransfer() public {
         
     }
