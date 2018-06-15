@@ -54,6 +54,8 @@ contract TPTSchedules is TPTData, Owned {
                     scheduleChains[_cid].nodes[prev].next = sid;
                     if (next == 0) {
                         scheduleChains[_cid].tail = sid;
+                    }else {
+                        scheduleChains[_cid].nodes[next].prev = sid;
                     }
                 }
             }
@@ -77,6 +79,7 @@ contract TPTSchedules is TPTData, Owned {
         uint256 sid;
         for (uint256 i = 0; i < _sids.length; i++) {
             sid = _sids[i];
+            require(scheduleChains[_cid].nodes[sid].sid == sid);
             next = scheduleChains[_cid].nodes[sid].next;
             prev = scheduleChains[_cid].nodes[sid].prev;
             if (next == 0) {
