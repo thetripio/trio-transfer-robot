@@ -22,19 +22,19 @@ contract TPTContributors is TPTData, Owned {
     /**
      * Record `_contributor`
      */
-    function _pushContributor(address _contributor) internal {
+    function _pushContributor(address _contributor, bytes32 _name) internal {
         require(_contributor != address(0));
         uint256 prev = 0;
         uint256 cid = contributorChain.index + 1;
         if (contributorChain.balance == 0) {
             contributorChain = ContributorChain(1, cid, cid, cid);
-            contributorChain.nodes[cid] = Contributor(0, 0, cid, _contributor);
+            contributorChain.nodes[cid] = Contributor(0, 0, cid, _contributor, _name);
         } else {
             contributorChain.index = cid;
             prev = contributorChain.tail;
             contributorChain.balance++;
 
-            contributorChain.nodes[cid] = Contributor(0, prev, cid, _contributor);
+            contributorChain.nodes[cid] = Contributor(0, prev, cid, _contributor, _name);
             contributorChain.nodes[prev].next = cid;
             contributorChain.tail = cid;
         }
@@ -79,9 +79,10 @@ contract TPTContributors is TPTData, Owned {
      * Record `_contributors`
      * @param _contributors The contributor
      */
-    function addContributors(address[] _contributors) external onlyOwner {
+    function addContributors(address[] _contributors, bytes32[] _names) external onlyOwner {
+        require(_contributors.length == _names.length && _contributors.length > 0);
         for(uint256 i = 0; i < _contributors.length; i++) {
-            _pushContributor(_contributors[i]);
+            _pushContributor(_contributors[i], _names[i]);
         }
 
         // Event
@@ -129,7 +130,7 @@ contract TPTContributors is TPTData, Owned {
      * Return the contributor by `_cid`
      * @return The contributor
      */
-    function contributor(uint _cid) external view returns(address) {
-        return contributorChain.nodes[_cid].contributor;
+    function contributor(uint _cid) external view returns(address, bytes32) {
+        return (contributorChain.nodes[_cid].contributor, contributorChain.nodes[_cid].name);
     }  
 }

@@ -8,6 +8,7 @@ contract TPTData {
         uint256 prev;
         uint256 cid;
         address contributor;
+        bytes32 name;
     }
     
     struct ContributorChain {
