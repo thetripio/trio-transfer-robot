@@ -71,10 +71,11 @@ contract TPTTransfer is TPTContributors, TPTSchedules {
     /**
      * Is there any transfer in schedule
      */
-    function totalTransfersInSchedule() external view returns(uint256) {
+    function totalTransfersInSchedule() external view returns(uint256,uint256) {
         // All contributors
         uint256[] memory _contributors = contributors();
         uint256 total = 0;
+        uint256 amount = 0;
         for (uint256 i = 0; i < _contributors.length; i++) {
             // cid and contributor address
             uint256 _cid = _contributors[i];            
@@ -84,13 +85,12 @@ contract TPTTransfer is TPTContributors, TPTSchedules {
                 // sid, trio and timestamp
                 uint256 _sid = _schedules[j];
                 uint256 _timestamp = scheduleChains[_cid].nodes[_sid].timestamp;
-
-                // hasn't arrived
                 if(_timestamp < now) {
                     total++;
+                    amount += scheduleChains[_cid].nodes[_sid].trio;
                 }
             }
         }
-        return total;
+        return (total,amount);
     }
 }
