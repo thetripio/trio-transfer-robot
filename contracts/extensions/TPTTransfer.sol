@@ -36,19 +36,19 @@ contract TPTTransfer is TPTContributors, TPTSchedules {
         TripioToken tripio = TripioToken(trioContract);
         
         // All contributors
-        uint256[] memory _contributors = contributors();
-        for (uint256 i = 0; i < _contributors.length; i++) {
+        uint32[] memory _contributors = contributors();
+        for (uint32 i = 0; i < _contributors.length; i++) {
             // cid and contributor address
-            uint256 _cid = _contributors[i];
+            uint32 _cid = _contributors[i];
             address _contributor = contributorChain.nodes[_cid].contributor;
             
             // All schedules
-            uint256[] memory _schedules = schedules(_cid);
-            for (uint256 j = 0; j < _schedules.length; j++) {
+            uint32[] memory _schedules = schedules(_cid);
+            for (uint32 j = 0; j < _schedules.length; j++) {
                 // sid, trio and timestamp
-                uint256 _sid = _schedules[j];
+                uint32 _sid = _schedules[j];
                 uint256 _trio = scheduleChains[_cid].nodes[_sid].trio;
-                uint256 _timestamp = scheduleChains[_cid].nodes[_sid].timestamp;
+                uint32 _timestamp = scheduleChains[_cid].nodes[_sid].timestamp;
 
                 // hasn't arrived
                 if(_timestamp > now) {
@@ -58,7 +58,7 @@ contract TPTTransfer is TPTContributors, TPTSchedules {
                 tripio.transfer(_contributor, _trio);
 
                 // Remove schedule of contributor
-                uint256[] memory _sids = new uint256[](1);
+                uint32[] memory _sids = new uint32[](1);
                 _sids[0] = _sid;
                 removeSchedules(_cid, _sids);
                 emit AutoTransfer(_contributor, _trio);
@@ -71,20 +71,20 @@ contract TPTTransfer is TPTContributors, TPTSchedules {
     /**
      * Is there any transfer in schedule
      */
-    function totalTransfersInSchedule() external view returns(uint256,uint256) {
+    function totalTransfersInSchedule() external view returns(uint32, uint256) {
         // All contributors
-        uint256[] memory _contributors = contributors();
-        uint256 total = 0;
+        uint32[] memory _contributors = contributors();
+        uint32 total = 0;
         uint256 amount = 0;
-        for (uint256 i = 0; i < _contributors.length; i++) {
+        for (uint32 i = 0; i < _contributors.length; i++) {
             // cid and contributor address
-            uint256 _cid = _contributors[i];            
+            uint32 _cid = _contributors[i];            
             // All schedules
-            uint256[] memory _schedules = schedules(_cid);
-            for (uint256 j = 0; j < _schedules.length; j++) {
+            uint32[] memory _schedules = schedules(_cid);
+            for (uint32 j = 0; j < _schedules.length; j++) {
                 // sid, trio and timestamp
-                uint256 _sid = _schedules[j];
-                uint256 _timestamp = scheduleChains[_cid].nodes[_sid].timestamp;
+                uint32 _sid = _schedules[j];
+                uint32 _timestamp = scheduleChains[_cid].nodes[_sid].timestamp;
                 if(_timestamp < now) {
                     total++;
                     amount += scheduleChains[_cid].nodes[_sid].trio;

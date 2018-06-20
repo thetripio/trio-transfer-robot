@@ -16,7 +16,7 @@ contract TPTContributors is TPTData, Owned {
     /**
      * This emits when contributors are removed
      */
-    event ContributorsRemoved(uint256[] indexed _cids);
+    event ContributorsRemoved(uint32[] indexed _cids);
 
 
     /**
@@ -24,8 +24,8 @@ contract TPTContributors is TPTData, Owned {
      */
     function _pushContributor(address _contributor, bytes32 _name) internal {
         require(_contributor != address(0));
-        uint256 prev = 0;
-        uint256 cid = contributorChain.index + 1;
+        uint32 prev = 0;
+        uint32 cid = contributorChain.index + 1;
         if (contributorChain.balance == 0) {
             contributorChain = ContributorChain(1, cid, cid, cid);
             contributorChain.nodes[cid] = Contributor(0, 0, cid, _contributor, _name);
@@ -43,10 +43,10 @@ contract TPTContributors is TPTData, Owned {
     /**
      * Remove contributor by `_cid`
      */
-    function _removeContributor(uint _cid) internal contributorValid(_cid) {
+    function _removeContributor(uint32 _cid) internal contributorValid(_cid) {
         require(_cid != 0);
-        uint256 next = 0;
-        uint256 prev = 0;
+        uint32 next = 0;
+        uint32 prev = 0;
         require(contributorChain.nodes[_cid].cid == _cid);
         next = contributorChain.nodes[_cid].next;
         prev = contributorChain.nodes[_cid].prev;
@@ -93,8 +93,8 @@ contract TPTContributors is TPTData, Owned {
      * Remove contributor by `_cids`
      * @param _cids The contributor's ids
      */
-    function removeContributors(uint256[] _cids) external onlyOwner {
-        for(uint256 i = 0; i < _cids.length; i++) {
+    function removeContributors(uint32[] _cids) external onlyOwner {
+        for(uint32 i = 0; i < _cids.length; i++) {
             _removeContributor(_cids[i]);
         }
 
@@ -106,15 +106,15 @@ contract TPTContributors is TPTData, Owned {
      * Returns all the contributors
      * @return All the contributors
      */
-    function contributors() public view returns(uint256[]) {
-        uint256 count;
-        uint256 index;
-        uint256 next;
+    function contributors() public view returns(uint32[]) {
+        uint32 count;
+        uint32 index;
+        uint32 next;
         index = 0;
         next = contributorChain.head;
         count = contributorChain.balance;
         if (count > 0) {
-            uint256[] memory result = new uint256[](count);
+            uint32[] memory result = new uint32[](count);
             while(next != 0 && index < count) {
                 result[index] = contributorChain.nodes[next].cid;
                 next = contributorChain.nodes[next].next;
@@ -122,7 +122,7 @@ contract TPTContributors is TPTData, Owned {
             }
             return result;
         } else {
-            return new uint256[](0);
+            return new uint32[](0);
         }
     }
 
@@ -130,7 +130,7 @@ contract TPTContributors is TPTData, Owned {
      * Return the contributor by `_cid`
      * @return The contributor
      */
-    function contributor(uint _cid) external view returns(address, bytes32) {
+    function contributor(uint32 _cid) external view returns(address, bytes32) {
         return (contributorChain.nodes[_cid].contributor, contributorChain.nodes[_cid].name);
     }  
 }

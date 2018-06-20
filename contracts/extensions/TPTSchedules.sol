@@ -11,12 +11,12 @@ contract TPTSchedules is TPTData, Owned {
     /**
      * This emits when schedules are inserted
      */
-    event SchedulesInserted(uint256 _cid);
+    event SchedulesInserted(uint32 _cid);
 
     /**
      * This emits when schedules are removed
      */
-    event SchedulesRemoved(uint _cid, uint256[] _sids);
+    event SchedulesRemoved(uint32 _cid, uint32[] _sids);
 
     /**
      * Record TRIO transfer schedule to  `_contributor`
@@ -24,15 +24,15 @@ contract TPTSchedules is TPTData, Owned {
      * @param _timestamps The transfer timestamps
      * @param _trios The transfer trios
      */
-    function insertSchedules(uint256 _cid, uint32[] _timestamps, uint256[] _trios) 
+    function insertSchedules(uint32 _cid, uint32[] _timestamps, uint256[] _trios) 
         external 
         onlyOwner 
         contributorValid(_cid) {
         require(_timestamps.length > 0 && _timestamps.length == _trios.length);
-        for (uint256 i = 0; i < _timestamps.length; i++) {
-            uint256 prev = 0;
-            uint256 next = 0;
-            uint256 sid = scheduleChains[_cid].index + 1;
+        for (uint32 i = 0; i < _timestamps.length; i++) {
+            uint32 prev = 0;
+            uint32 next = 0;
+            uint32 sid = scheduleChains[_cid].index + 1;
             if (scheduleChains[_cid].balance == 0) {
                 scheduleChains[_cid] = ScheduleChain(1, sid, sid, sid);
                 scheduleChains[_cid].nodes[sid] = Schedule(0, 0, sid, _timestamps[i], _trios[i]);
@@ -70,14 +70,14 @@ contract TPTSchedules is TPTData, Owned {
      * @param _cid The contributor's id
      * @param _sids The schedule's ids
      */
-    function removeSchedules(uint _cid, uint256[] _sids) 
+    function removeSchedules(uint32 _cid, uint32[] _sids) 
         public 
         onlyOwner 
         contributorValid(_cid) {
-        uint256 next = 0;
-        uint256 prev = 0;
-        uint256 sid;
-        for (uint256 i = 0; i < _sids.length; i++) {
+        uint32 next = 0;
+        uint32 prev = 0;
+        uint32 sid;
+        for (uint32 i = 0; i < _sids.length; i++) {
             sid = _sids[i];
             require(scheduleChains[_cid].nodes[sid].sid == sid);
             next = scheduleChains[_cid].nodes[sid].next;
@@ -116,19 +116,19 @@ contract TPTSchedules is TPTData, Owned {
      * @param _cid The contributor's id 
      * @return All the schedules of `_cid`
      */
-    function schedules(uint256 _cid) 
+    function schedules(uint32 _cid) 
         public 
         contributorValid(_cid) 
         view 
-        returns(uint256[]) {
-        uint256 count;
-        uint256 index;
-        uint256 next;
+        returns(uint32[]) {
+        uint32 count;
+        uint32 index;
+        uint32 next;
         index = 0;
         next = scheduleChains[_cid].head;
         count = scheduleChains[_cid].balance;
         if (count > 0) {
-            uint256[] memory result = new uint256[](count);
+            uint32[] memory result = new uint32[](count);
             while(next != 0 && index < count) {
                 result[index] = scheduleChains[_cid].nodes[next].sid;
                 next = scheduleChains[_cid].nodes[next].next;
@@ -136,7 +136,7 @@ contract TPTSchedules is TPTData, Owned {
             }
             return result;
         } else {
-            return new uint256[](0);
+            return new uint32[](0);
         }
     }
 
@@ -146,7 +146,7 @@ contract TPTSchedules is TPTData, Owned {
      * @param _sid The schedule's id
      * @return The schedule
      */
-    function schedule(uint256 _cid, uint256 _sid) 
+    function schedule(uint32 _cid, uint32 _sid) 
         public
         scheduleValid(_cid, _sid) 
         view 
